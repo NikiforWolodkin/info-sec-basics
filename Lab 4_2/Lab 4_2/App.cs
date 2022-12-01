@@ -3,77 +3,74 @@ using System.Security.Cryptography;
 using System.Text;
 
 
-namespace Lab_4_2
+class RSA
 {
-    class RSA
+    static void Main()
     {
-        static void Main()
+        try
         {
-            try
+            UnicodeEncoding ByteConverter = new UnicodeEncoding();
+
+            Console.Write("Введите сообщение: ");
+
+            byte[] dataToEncrypt = ByteConverter.GetBytes(Console.ReadLine());
+            byte[] encryptedData;
+            byte[] decryptedData;
+
+            using (RSACryptoServiceProvider RSA = new RSACryptoServiceProvider())
             {
-                UnicodeEncoding ByteConverter = new UnicodeEncoding();
+                encryptedData = RSAEncrypt(dataToEncrypt, RSA.ExportParameters(false), false);
 
-                Console.Write("Введите сообщение: ");
+                decryptedData = RSADecrypt(encryptedData, RSA.ExportParameters(true), false);
 
-                byte[] dataToEncrypt = ByteConverter.GetBytes(Console.ReadLine());
-                byte[] encryptedData;
-                byte[] decryptedData;
-
-                using (RSACryptoServiceProvider RSA = new RSACryptoServiceProvider())
-                {
-                    encryptedData = RSAEncrypt(dataToEncrypt, RSA.ExportParameters(false), false);
-
-                    decryptedData = RSADecrypt(encryptedData, RSA.ExportParameters(true), false);
-
-                    Console.WriteLine("Расшифрованное сообщение: {0}", ByteConverter.GetString(decryptedData));
-                }
-            }
-            catch (ArgumentNullException)
-            {
-                Console.WriteLine("Не удалось расшифровать сообщение.");
+                Console.WriteLine("Расшифрованное сообщение: {0}", ByteConverter.GetString(decryptedData));
             }
         }
-
-        public static byte[] RSAEncrypt(byte[] DataToEncrypt, RSAParameters RSAKeyInfo, bool DoOAEPPadding)
+        catch (ArgumentNullException)
         {
-            try
-            {
-                byte[] encryptedData;
-                using (RSACryptoServiceProvider RSA = new RSACryptoServiceProvider())
-                {
-                    RSA.ImportParameters(RSAKeyInfo);
-
-                    encryptedData = RSA.Encrypt(DataToEncrypt, DoOAEPPadding);
-                }
-                return encryptedData;
-            }
-            catch (CryptographicException e)
-            {
-                Console.WriteLine(e.Message);
-
-                return null;
-            }
+            Console.WriteLine("Не удалось расшифровать сообщение.");
         }
+    }
 
-        public static byte[] RSADecrypt(byte[] DataToDecrypt, RSAParameters RSAKeyInfo, bool DoOAEPPadding)
+    public static byte[] RSAEncrypt(byte[] DataToEncrypt, RSAParameters RSAKeyInfo, bool DoOAEPPadding)
+    {
+        try
         {
-            try
+            byte[] encryptedData;
+            using (RSACryptoServiceProvider RSA = new RSACryptoServiceProvider())
             {
-                byte[] decryptedData;
-                using (RSACryptoServiceProvider RSA = new RSACryptoServiceProvider())
-                {
-                    RSA.ImportParameters(RSAKeyInfo);
+                RSA.ImportParameters(RSAKeyInfo);
 
-                    decryptedData = RSA.Decrypt(DataToDecrypt, DoOAEPPadding);
-                }
-                return decryptedData;
+                encryptedData = RSA.Encrypt(DataToEncrypt, DoOAEPPadding);
             }
-            catch (CryptographicException e)
+            return encryptedData;
+        }
+        catch (CryptographicException e)
+        {
+            Console.WriteLine(e.Message);
+
+            return null;
+        }
+    }
+
+    public static byte[] RSADecrypt(byte[] DataToDecrypt, RSAParameters RSAKeyInfo, bool DoOAEPPadding)
+    {
+        try
+        {
+            byte[] decryptedData;
+            using (RSACryptoServiceProvider RSA = new RSACryptoServiceProvider())
             {
-                Console.WriteLine(e.ToString());
+                RSA.ImportParameters(RSAKeyInfo);
 
-                return null;
+                decryptedData = RSA.Decrypt(DataToDecrypt, DoOAEPPadding);
             }
+            return decryptedData;
+        }
+        catch (CryptographicException e)
+        {
+            Console.WriteLine(e.ToString());
+
+            return null;
         }
     }
 }
