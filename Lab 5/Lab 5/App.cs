@@ -30,6 +30,25 @@ class RSASign
             {
                 Console.WriteLine("ЭЦП не принадлежит этому сообщению");
             }
+
+            if (VerifySignedHash(ByteConverter.GetBytes(dataString + "1"), signedData, Key))
+            {
+                Console.WriteLine("ЭЦП принадлежит этому сообщению");
+            }
+            else
+            {
+                Console.WriteLine("ЭЦП не принадлежит этому сообщению");
+            }
+
+            signedData[0] = 0;
+            if (VerifySignedHash(originalData, signedData, Key))
+            {
+                Console.WriteLine("ЭЦП принадлежит этому сообщению");
+            }
+            else
+            {
+                Console.WriteLine("ЭЦП не принадлежит этому сообщению");
+            }
         }
         catch (ArgumentNullException)
         {
