@@ -66,7 +66,7 @@ const encryptDecryptAndWrapKey = async message => {
 	wrappedKey.wrappingKey, wrappedKey.wrappingKeyParams, wrappedKey.keyParams, true, wrappedKey.keyUsages);
 	console.log('Wrapped key:');
 	console.table(wrappedKey);
-	console.log('Unrapped key:');
+	console.log('Unwrapped key:');
 	console.table(unwrappedKey);
 	console.log(`Unwrapped key matches original key: ${JSON.stringify(unwrappedKey) === JSON.stringify(key)}`);
 };
